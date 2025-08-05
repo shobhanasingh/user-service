@@ -3,12 +3,16 @@ const UserProfile = require("../models/user.model");
 
 //called by auth-service to create new user
 exports.userRegister = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, role } = req.body || {};
   try {
     const existingUser = await UserProfile.findOne({ email });
     if (existingUser)
       return res.status(400).json({ message: "User already exists!!" });
-    const newUser = await UserProfile.create({ email, password });
+    const newUser = await UserProfile.create({
+      email,
+      password,
+      role,
+    });
     console.log(newUser);
     res.status(201).json({ userId: newUser._id });
   } catch (err) {
